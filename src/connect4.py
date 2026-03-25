@@ -8,6 +8,7 @@ COLS = 7
 EMPTY = 0
 PLAYER_PIECE = 1
 AI_PIECE = 2
+WINDOW_LENGTH = 4
 
 def create_board():
     return np.zeros((ROWS, COLS), dtype=int)
@@ -26,6 +27,9 @@ def get_next_open_row(board, col):
 
 def get_valid_locations(board):
     return [col for col in range(COLS) if is_valid_location(board, col)]
+
+def copy_board(board):
+    return board.copy()
 
 def winning_move(board, piece):
     # Horizontal
@@ -56,6 +60,72 @@ def is_terminal_node(board):
         winning_move(board, AI_PIECE) or
         len(get_valid_locations(board)) == 0
     )
+
+def evaluate_window(window, piece):
+    score = 0
+    opp_piece = PLAYER_PIECE if piece == AI_PIECE else AI_PIECE
+
+    if window.count(piece) == 4:
+        score += 100
+    elif window.count(piece) == 3 and window.count(EMPTY) == 1:
+        score += 8
+    elif window.count(piece) == 2 and window.count(EMPTY) == 2:
+        score += 3
+
+    if window.count(opp_piece) == 3 and window.count(EMPTY) == 1:
+        score -= 10
+
+    return score
+
+def score_position(board, piece):
+    score = 0
+
+    center_array = [int(value) for value in board[:, COLS // 2]]
+    score += center_array.count(piece) * 4
+
+    for r in range(ROWS):
+        row_array = [int(value) for value in board[r, :]]
+        for c in range(COLS - 3):
+            window = row_array[c:c + WINDOW_LENGTH]
+            score += evaluate_window(window, piece)
+
+    for c in range(COLS):
+        col_array = [int(value) for value in board[:, c]]
+        for r in range(ROWS - 3):
+            window = col_array[r:r + WINDOW_LENGTH]
+            score += evaluate_window(window, piece)
+
+    for r in range(ROWS - 3):
+        for c in range(COLS - 3):
+            window = [int(board[r + i][c + i]) for i in range(WINDOW_LENGTH)]
+            score += evaluate_window(window, piece)
+
+    for r in range(3, ROWS):
+        for c in range(COLS - 3):
+            window = [int(board[r - i][c + i]) for i in range(WINDOW_LENGTH)]
+            score += evaluate_window(window, piece)
+
+    return score
+
+def pick_best_move(board, piece):
+    valid_locations = get_valid_locations(board)
+    if not valid_locations:
+        return None
+
+    best_score = float("-inf")
+    best_col = valid_locations[0]
+
+    for col in valid_locations:
+        row = get_next_open_row(board, col)
+        temp_board = copy_board(board)
+        drop_piece(temp_board, row, col, piece)
+        score = score_position(temp_board, piece)
+
+        if score > best_score:
+            best_score = score
+            best_col = col
+
+    return best_col
 
 def print_board(board):
     print(np.flip(board, 0))
