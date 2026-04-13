@@ -1,7 +1,7 @@
 import pygame
 from src.ui.constants import SIZE, init_fonts
 from src.ui.welcome import run_welcome
-from src.ui.game import run_game
+from src.game_loop import run_game
 
 
 def main():
