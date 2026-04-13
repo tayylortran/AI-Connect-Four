@@ -1,3 +1,7 @@
+# Runs a Connect Four match: handles pygame events, manages turns, calls the
+# AI, and determines when the game ends. Depends on connect4.py for rules and
+# ui/game.py for rendering.
+
 import pygame
 import sys
 import src.ui.constants as C

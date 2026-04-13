@@ -1,5 +1,5 @@
-# This file will contain the core Connect Four game logic, including the board
-# representation, move handling, and functions to check for wins or valid moves.
+# Core Connect Four game rules: board representation, move validation, win
+# detection, and position scoring. No UI or AI logic — just the rules.
 
 import numpy as np
 
