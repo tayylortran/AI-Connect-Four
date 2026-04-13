@@ -7,7 +7,7 @@ from src.connect4 import (
     ROWS, COLS, PLAYER_PIECE, AI_PIECE
 )
 from src.ai import pick_best_move
-from src.ui.game import draw_board, draw_tree, draw_hover, show_message
+from src.ui.game import draw_board, draw_hover, show_message
 
 
 def run_game(screen, mode):
@@ -18,7 +18,6 @@ def run_game(screen, mode):
     is_draw = False
     turn = PLAYER_PIECE
     hover_col = COLS // 2
-    tree_root = None
 
     while True:
         clock.tick(60)
@@ -60,10 +59,9 @@ def run_game(screen, mode):
 
         if mode == "cpu" and not game_over and turn == AI_PIECE:
             draw_board(screen, board)
-            draw_tree(screen, tree_root)
             pygame.display.update()
             pygame.time.wait(500)
-            col, tree_root = pick_best_move(board, AI_PIECE)
+            col = pick_best_move(board, AI_PIECE)
 
             if col is None:
                 game_over = True
@@ -82,8 +80,6 @@ def run_game(screen, mode):
                     turn = PLAYER_PIECE
 
         draw_board(screen, board)
-        if mode == "cpu":
-            draw_tree(screen, tree_root)
 
         if not game_over:
             draw_hover(screen, hover_col, turn)

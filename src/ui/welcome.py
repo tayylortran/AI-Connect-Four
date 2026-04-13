@@ -33,9 +33,8 @@ class Button:
 def run_welcome(screen):
     clock = pygame.time.Clock()
 
-    full_w = C.WIDTH + C.TREE_PANEL_WIDTH
     btn_w, btn_h = 320, 70
-    center_x = full_w // 2 - btn_w // 2
+    center_x = C.WIDTH // 2 - btn_w // 2
 
     btn_pvp  = Button(center_x, 300, btn_w, btn_h, "Player vs Player", C.BLUE, (60, 130, 220))
     btn_cpu  = Button(center_x, 410, btn_w, btn_h, "Player vs CPU", (160, 30, 180), (190, 60, 210))
@@ -46,17 +45,17 @@ def run_welcome(screen):
         screen.fill(C.DARK_GRAY)
 
         title = C.FONT_LARGE.render("Connect Four", True, C.YELLOW)
-        trect = title.get_rect(center=(full_w // 2, 130))
+        trect = title.get_rect(center=(C.WIDTH // 2, 130))
         screen.blit(title, trect)
 
         sub = C.FONT_SMALL.render("Choose a game mode to begin", True, (180, 180, 180))
-        srect = sub.get_rect(center=(full_w // 2, 210))
+        srect = sub.get_rect(center=(C.WIDTH // 2, 210))
         screen.blit(sub, srect)
 
         pygame.draw.circle(screen, C.RED,    (80, 80), 40)
-        pygame.draw.circle(screen, C.YELLOW, (full_w - 80, 80), 40)
+        pygame.draw.circle(screen, C.YELLOW, (C.WIDTH - 80, 80), 40)
         pygame.draw.circle(screen, C.BLUE,   (80, C.HEIGHT - 80), 40)
-        pygame.draw.circle(screen, C.RED,    (full_w - 80, C.HEIGHT - 80), 40)
+        pygame.draw.circle(screen, C.RED,    (C.WIDTH - 80, C.HEIGHT - 80), 40)
 
         btn_pvp.draw(screen)
         btn_cpu.draw(screen)
