@@ -11,11 +11,10 @@ def main():
     init_fonts()
 
     while True:
-        mode = run_welcome(screen)        # "pvp" or "cpu"
-        result = run_game(screen, mode)   # "restart" or "menu"
-        # "restart" loops back to game, "menu" loops back to welcome
+        mode, ai = run_welcome(screen)
+        result = run_game(screen, mode, ai)
         while result == "restart":
-            result = run_game(screen, mode)
+            result = run_game(screen, mode, ai)
 
 
 if __name__ == "__main__":

@@ -1,6 +1,7 @@
 import pygame
 import sys
 import src.ui.constants as C
+from src.ai import RandomAI, GreedyAI, MinimaxAI
 
 
 class Button:
@@ -28,6 +29,48 @@ class Button:
             event.type == pygame.MOUSEBUTTONDOWN and
             self.rect.collidepoint(event.pos)
         )
+
+
+def run_ai_select(screen):
+    clock = pygame.time.Clock()
+
+    btn_w, btn_h = 320, 70
+    center_x = C.WIDTH // 2 - btn_w // 2
+
+    btn_random  = Button(center_x, 230, btn_w, btn_h, "Random",          (30, 140, 80),  (50, 170, 100))
+    btn_greedy  = Button(center_x, 330, btn_w, btn_h, "Greedy",          (160, 120, 20), (200, 155, 30))
+    btn_minimax = Button(center_x, 430, btn_w, btn_h, "Minimax (depth 5)", (160, 30, 180), (190, 60, 210))
+    btn_back    = Button(center_x, 540, btn_w, btn_h, "Back",             (80, 80, 80),   (110, 110, 110))
+
+    while True:
+        clock.tick(60)
+        screen.fill(C.DARK_GRAY)
+
+        title = C.FONT_LARGE.render("Choose Opponent", True, C.YELLOW)
+        screen.blit(title, title.get_rect(center=(C.WIDTH // 2, 110)))
+
+        sub = C.FONT_SMALL.render("Select an AI to play against", True, (180, 180, 180))
+        screen.blit(sub, sub.get_rect(center=(C.WIDTH // 2, 180)))
+
+        btn_random.draw(screen)
+        btn_greedy.draw(screen)
+        btn_minimax.draw(screen)
+        btn_back.draw(screen)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if btn_random.is_clicked(event):
+                return RandomAI()
+            if btn_greedy.is_clicked(event):
+                return GreedyAI()
+            if btn_minimax.is_clicked(event):
+                return MinimaxAI(depth=5)
+            if btn_back.is_clicked(event):
+                return None
+
+        pygame.display.update()
 
 
 def run_welcome(screen):
@@ -66,9 +109,11 @@ def run_welcome(screen):
                 pygame.quit()
                 sys.exit()
             if btn_pvp.is_clicked(event):
-                return "pvp"
+                return "pvp", None
             if btn_cpu.is_clicked(event):
-                return "cpu"
+                ai = run_ai_select(screen)
+                if ai is not None:
+                    return "cpu", ai
             if btn_quit.is_clicked(event):
                 pygame.quit()
                 sys.exit()

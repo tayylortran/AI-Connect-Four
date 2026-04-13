@@ -10,11 +10,10 @@ from src.connect4 import (
     get_next_open_row, get_valid_locations, winning_move,
     ROWS, COLS, PLAYER_PIECE, AI_PIECE
 )
-from src.ai import pick_best_move
 from src.ui.game import draw_board, draw_hover, show_message
 
 
-def run_game(screen, mode):
+def run_game(screen, mode, ai=None):
     clock = pygame.time.Clock()
     board = create_board()
     game_over = False
@@ -65,7 +64,7 @@ def run_game(screen, mode):
             draw_board(screen, board)
             pygame.display.update()
             pygame.time.wait(500)
-            col = pick_best_move(board, AI_PIECE)
+            col = ai.get_move(board, AI_PIECE)
 
             if col is None:
                 game_over = True
