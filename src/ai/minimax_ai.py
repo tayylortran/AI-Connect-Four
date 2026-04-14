@@ -1,20 +1,23 @@
-# Minimax AI with alpha-beta pruning. Depth is configurable at instantiation.
+# Minimax AI with alpha-beta pruning. Depth and heuristic are configurable at
+# instantiation — swap in a different heuristic to change play style.
 
 from src.ai.base import AIPlayer
+from src.ai.heuristics import balanced_heuristic
 from src.connect4 import (
     get_valid_locations, is_terminal_node, winning_move,
-    get_next_open_row, copy_board, drop_piece, score_position
+    get_next_open_row, copy_board, drop_piece
 )
 
 
 class MinimaxAI(AIPlayer):
-    def __init__(self, depth: int = 5):
+    def __init__(self, depth: int = 5, heuristic=None):
         super().__init__()
         self.depth = depth
+        self.heuristic = heuristic or balanced_heuristic
 
     @property
     def name(self) -> str:
-        return f"Minimax(depth={self.depth})"
+        return f"Minimax(depth={self.depth}, heuristic={self.heuristic.__name__})"
 
     def get_move(self, board, piece) -> int:
         opp_piece = 1 if piece == 2 else 2
@@ -38,7 +41,7 @@ class MinimaxAI(AIPlayer):
                 return (None, 0)
 
         if depth == 0:
-            return (None, score_position(board, my_piece))
+            return (None, self.heuristic(board, my_piece))
 
         if maximizing:
             value = float("-inf")

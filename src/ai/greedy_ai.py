@@ -2,9 +2,9 @@
 # directly, with no lookahead. One step above random, one step below minimax.
 
 from src.ai.base import AIPlayer
+from src.ai.heuristics import balanced_heuristic
 from src.connect4 import (
-    get_valid_locations, get_next_open_row, copy_board,
-    drop_piece, score_position
+    get_valid_locations, get_next_open_row, copy_board, drop_piece
 )
 
 
@@ -25,7 +25,7 @@ class GreedyAI(AIPlayer):
             row = get_next_open_row(board, col)
             temp_board = copy_board(board)
             drop_piece(temp_board, row, col, piece)
-            score = score_position(temp_board, piece)
+            score = balanced_heuristic(temp_board, piece)
             if score > best_score:
                 best_score = score
                 best_col = col

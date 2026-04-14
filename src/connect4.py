@@ -1,5 +1,5 @@
-# Core Connect Four game rules: board representation, move validation, win
-# detection, and position scoring. No UI or AI logic — just the rules.
+# Core Connect Four game rules: board representation, move validation, and win
+# detection. No UI or AI logic — just the rules.
 
 import numpy as np
 
@@ -8,7 +8,6 @@ COLS = 7
 EMPTY = 0
 PLAYER_PIECE = 1
 AI_PIECE = 2
-WINDOW_LENGTH = 4
 
 def create_board():
     return np.zeros((ROWS, COLS), dtype=int)
@@ -60,52 +59,6 @@ def is_terminal_node(board):
         winning_move(board, AI_PIECE) or
         len(get_valid_locations(board)) == 0
     )
-
-def evaluate_window(window, piece):
-    score = 0
-    opp_piece = PLAYER_PIECE if piece == AI_PIECE else AI_PIECE
-
-    if window.count(piece) == 4:
-        score += 100
-    elif window.count(piece) == 3 and window.count(EMPTY) == 1:
-        score += 8
-    elif window.count(piece) == 2 and window.count(EMPTY) == 2:
-        score += 3
-
-    if window.count(opp_piece) == 3 and window.count(EMPTY) == 1:
-        score -= 10
-
-    return score
-
-def score_position(board, piece):
-    score = 0
-
-    center_array = [int(value) for value in board[:, COLS // 2]]
-    score += center_array.count(piece) * 4
-
-    for r in range(ROWS):
-        row_array = [int(value) for value in board[r, :]]
-        for c in range(COLS - 3):
-            window = row_array[c:c + WINDOW_LENGTH]
-            score += evaluate_window(window, piece)
-
-    for c in range(COLS):
-        col_array = [int(value) for value in board[:, c]]
-        for r in range(ROWS - 3):
-            window = col_array[r:r + WINDOW_LENGTH]
-            score += evaluate_window(window, piece)
-
-    for r in range(ROWS - 3):
-        for c in range(COLS - 3):
-            window = [int(board[r + i][c + i]) for i in range(WINDOW_LENGTH)]
-            score += evaluate_window(window, piece)
-
-    for r in range(3, ROWS):
-        for c in range(COLS - 3):
-            window = [int(board[r - i][c + i]) for i in range(WINDOW_LENGTH)]
-            score += evaluate_window(window, piece)
-
-    return score
 
 def print_board(board):
     print(np.flip(board, 0))

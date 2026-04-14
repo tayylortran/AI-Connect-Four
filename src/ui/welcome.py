@@ -2,6 +2,7 @@ import pygame
 import sys
 import src.ui.constants as C
 from src.ai import MinimaxAI
+from src.ai.heuristics import aggressive_heuristic, balanced_heuristic, defensive_heuristic
 
 
 class Button:
@@ -62,11 +63,11 @@ def run_ai_select(screen):
                 pygame.quit()
                 sys.exit()
             if btn_easy.is_clicked(event):
-                return MinimaxAI(depth=2)
+                return MinimaxAI(depth=2, heuristic=aggressive_heuristic)
             if btn_medium.is_clicked(event):
-                return MinimaxAI(depth=5)
+                return MinimaxAI(depth=5, heuristic=balanced_heuristic)
             if btn_hard.is_clicked(event):
-                return MinimaxAI(depth=8)
+                return MinimaxAI(depth=8, heuristic=defensive_heuristic)
             if btn_back.is_clicked(event):
                 return None
 
