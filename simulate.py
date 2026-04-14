@@ -3,17 +3,15 @@
 # Output: data/games_<timestamp>.csv and data/moves_<timestamp>.csv
 
 from src.ai import RandomAI, GreedyAI, MinimaxAI
+from src.ai.heuristics import aggressive_heuristic, balanced_heuristic, defensive_heuristic
 from src.simulation import run_game
 from src.logger import CSVLogger
 
 # --- Configure matchups and number of games here ---
 MATCHUPS = [
-    (RandomAI(),       GreedyAI()),
-    (RandomAI(),       MinimaxAI(depth=3)),
-    (GreedyAI(),       MinimaxAI(depth=3)),
-    (MinimaxAI(depth=3), MinimaxAI(depth=5)),
+    (MinimaxAI(depth=5, heuristic=aggressive_heuristic),  MinimaxAI(depth=5, heuristic=defensive_heuristic)),
 ]
-GAMES_PER_MATCHUP = 20
+GAMES_PER_MATCHUP = 100
 # ---------------------------------------------------
 
 def main():
