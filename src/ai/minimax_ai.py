@@ -26,7 +26,7 @@ class MinimaxAI(AIPlayer):
 
     def _minimax(self, board, depth, alpha, beta, maximizing, my_piece, opp_piece):
         self._node_count += 1
-        valid_locations = get_valid_locations(board)
+        valid_locations = sorted(get_valid_locations(board), key=lambda c: abs(c - 3))
         terminal = is_terminal_node(board)
 
         if terminal:
