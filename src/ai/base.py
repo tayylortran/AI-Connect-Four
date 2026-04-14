@@ -5,6 +5,10 @@ from abc import ABC, abstractmethod
 
 
 class AIPlayer(ABC):
+    def __init__(self):
+        self.nodes_evaluated = 0
+        self.last_score = 0
+
     @property
     @abstractmethod
     def name(self) -> str:
@@ -12,4 +16,5 @@ class AIPlayer(ABC):
 
     @abstractmethod
     def get_move(self, board, piece) -> int:
+        """Return the chosen column and update nodes_evaluated and last_score."""
         pass

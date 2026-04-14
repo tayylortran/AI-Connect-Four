@@ -9,6 +9,7 @@ from src.connect4 import (
 
 class MinimaxAI(AIPlayer):
     def __init__(self, depth: int = 5):
+        super().__init__()
         self.depth = depth
 
     @property
@@ -17,10 +18,14 @@ class MinimaxAI(AIPlayer):
 
     def get_move(self, board, piece) -> int:
         opp_piece = 1 if piece == 2 else 2
-        col, _ = self._minimax(board, self.depth, float("-inf"), float("inf"), True, piece, opp_piece)
+        self._node_count = 0
+        col, score = self._minimax(board, self.depth, float("-inf"), float("inf"), True, piece, opp_piece)
+        self.nodes_evaluated = self._node_count
+        self.last_score = score
         return col
 
     def _minimax(self, board, depth, alpha, beta, maximizing, my_piece, opp_piece):
+        self._node_count += 1
         valid_locations = get_valid_locations(board)
         terminal = is_terminal_node(board)
 

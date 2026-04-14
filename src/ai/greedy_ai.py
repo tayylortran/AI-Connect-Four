@@ -9,6 +9,9 @@ from src.connect4 import (
 
 
 class GreedyAI(AIPlayer):
+    def __init__(self):
+        super().__init__()
+
     @property
     def name(self) -> str:
         return "Greedy"
@@ -27,4 +30,6 @@ class GreedyAI(AIPlayer):
                 best_score = score
                 best_col = col
 
+        self.nodes_evaluated = len(valid_locations)
+        self.last_score = best_score
         return best_col
