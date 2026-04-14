@@ -9,9 +9,9 @@ from src.logger import CSVLogger
 
 # --- Configure matchups and number of games here ---
 MATCHUPS = [
-    (MinimaxAI(depth=5, heuristic=aggressive_heuristic),  MinimaxAI(depth=5, heuristic=defensive_heuristic)),
+    (MinimaxAI(depth=5, heuristic=defensive_heuristic),  MinimaxAI(depth=5, heuristic=balanced_heuristic)),
 ]
-GAMES_PER_MATCHUP = 100
+GAMES_PER_MATCHUP = 10
 # ---------------------------------------------------
 
 def main():
@@ -22,8 +22,9 @@ def main():
         game_id = 0
         for ai1, ai2 in MATCHUPS:
             wins = {ai1.name: 0, ai2.name: 0, 'Draw': 0}
-            for _ in range(GAMES_PER_MATCHUP):
-                game, moves = run_game(ai1, ai2)
+            for i in range(GAMES_PER_MATCHUP):
+                first, second = (ai1, ai2) if i % 2 == 0 else (ai2, ai1)
+                game, moves = run_game(first, second)
                 logger.log(game_id, game, moves)
                 wins[game['winner']] += 1
                 game_id += 1
