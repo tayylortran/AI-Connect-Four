@@ -32,6 +32,65 @@ class Button:
         )
 
 
+def run_style_select(screen, depth):
+    clock = pygame.time.Clock()
+
+    btn_w, btn_h = 320, 70
+    center_x = C.WIDTH // 2 - btn_w // 2
+
+    btn_aggressive = Button(center_x, 230, btn_w, btn_h, "Aggressive", (160, 30, 30),   (200, 55, 55))
+    btn_balanced   = Button(center_x, 330, btn_w, btn_h, "Balanced",   (30, 100, 180),  (50, 130, 220))
+    btn_defensive  = Button(center_x, 430, btn_w, btn_h, "Defensive",  (30, 140, 80),   (50, 170, 100))
+    btn_back       = Button(center_x, 530, btn_w, btn_h, "Back",       (80, 80, 80),    (110, 110, 110))
+
+    descriptions = {
+        "Aggressive": "Chases wins — ignores some blocks",
+        "Balanced":   "Equal weight on offense and defense",
+        "Defensive":  "Shuts down your threats first",
+    }
+    hovered_desc = ""
+
+    while True:
+        clock.tick(60)
+        screen.fill(C.DARK_GRAY)
+
+        title = C.FONT_LARGE.render("Choose Play Style", True, C.YELLOW)
+        screen.blit(title, title.get_rect(center=(C.WIDTH // 2, 100)))
+
+        sub = C.FONT_SMALL.render(f"Depth {depth} selected — now pick a style", True, (180, 180, 180))
+        screen.blit(sub, sub.get_rect(center=(C.WIDTH // 2, 160)))
+
+        btn_aggressive.draw(screen)
+        btn_balanced.draw(screen)
+        btn_defensive.draw(screen)
+        btn_back.draw(screen)
+
+        # Show description for hovered button
+        mouse = pygame.mouse.get_pos()
+        hovered_desc = ""
+        for btn, key in [(btn_aggressive, "Aggressive"), (btn_balanced, "Balanced"), (btn_defensive, "Defensive")]:
+            if btn.rect.collidepoint(mouse):
+                hovered_desc = descriptions[key]
+        if hovered_desc:
+            desc = C.FONT_SMALL.render(hovered_desc, True, (210, 210, 210))
+            screen.blit(desc, desc.get_rect(center=(C.WIDTH // 2, 615)))
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if btn_aggressive.is_clicked(event):
+                return MinimaxAI(depth=depth, heuristic=aggressive_heuristic)
+            if btn_balanced.is_clicked(event):
+                return MinimaxAI(depth=depth, heuristic=balanced_heuristic)
+            if btn_defensive.is_clicked(event):
+                return MinimaxAI(depth=depth, heuristic=defensive_heuristic)
+            if btn_back.is_clicked(event):
+                return None
+
+        pygame.display.update()
+
+
 def run_ai_select(screen):
     clock = pygame.time.Clock()
 
@@ -63,11 +122,17 @@ def run_ai_select(screen):
                 pygame.quit()
                 sys.exit()
             if btn_easy.is_clicked(event):
-                return MinimaxAI(depth=2, heuristic=aggressive_heuristic)
+                ai = run_style_select(screen, depth=2)
+                if ai is not None:
+                    return ai
             if btn_medium.is_clicked(event):
-                return MinimaxAI(depth=5, heuristic=balanced_heuristic)
+                ai = run_style_select(screen, depth=5)
+                if ai is not None:
+                    return ai
             if btn_hard.is_clicked(event):
-                return MinimaxAI(depth=8, heuristic=defensive_heuristic)
+                ai = run_style_select(screen, depth=8)
+                if ai is not None:
+                    return ai
             if btn_back.is_clicked(event):
                 return None
 
