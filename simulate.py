@@ -9,9 +9,12 @@ from src.logger import CSVLogger
 
 # --- Configure matchups and number of games here ---
 MATCHUPS = [
-    (MinimaxAI(depth=5, heuristic=defensive_heuristic),  MinimaxAI(depth=5, heuristic=balanced_heuristic)),
+    (MinimaxAI(depth=5, heuristic=balanced_heuristic), MinimaxAI(depth=5, heuristic=aggressive_heuristic)),
+    (MinimaxAI(depth=5, heuristic=balanced_heuristic), MinimaxAI(depth=5, heuristic=defensive_heuristic)),
+    (MinimaxAI(depth=5, heuristic=aggressive_heuristic), MinimaxAI(depth=5, heuristic=defensive_heuristic)),
+    (MinimaxAI(depth=3, heuristic=balanced_heuristic), MinimaxAI(depth=5, heuristic=balanced_heuristic)),
 ]
-GAMES_PER_MATCHUP = 10
+GAMES_PER_MATCHUP = 5
 # ---------------------------------------------------
 
 def main():
