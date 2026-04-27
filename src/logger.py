@@ -7,8 +7,17 @@ from datetime import datetime
 
 
 class CSVLogger:
-    GAME_FIELDS = ['game_id', 'ai1_name', 'ai2_name', 'winner', 'total_moves', 'duration_seconds']
-    MOVE_FIELDS = ['game_id', 'move_num', 'ai_name', 'col_chosen', 'score', 'nodes_evaluated', 'time_ms']
+    GAME_FIELDS = [
+        'game_id',
+        'ai1_name', 'ai1_type', 'ai1_depth', 'ai1_heuristic',
+        'ai2_name', 'ai2_type', 'ai2_depth', 'ai2_heuristic',
+        'starting_ai', 'winner', 'is_draw', 'total_moves', 'duration_seconds'
+    ]
+    MOVE_FIELDS = [
+        'game_id',
+        'move_num', 'ai_name', 'ai_type', 'ai_depth', 'ai_heuristic',
+        'piece', 'col_chosen', 'score', 'nodes_evaluated', 'time_ms'
+    ]
 
     def __init__(self, output_dir='data'):
         os.makedirs(output_dir, exist_ok=True)

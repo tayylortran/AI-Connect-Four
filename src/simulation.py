@@ -8,6 +8,15 @@ from src.connect4 import (
 )
 
 
+def _ai_metadata(ai):
+    heuristic = getattr(ai, "heuristic", None)
+    return {
+        'ai_type': ai.__class__.__name__,
+        'depth': getattr(ai, "depth", ""),
+        'heuristic': heuristic.__name__ if heuristic is not None else "",
+    }
+
+
 def run_game(ai1, ai2):
     """
     ai1 plays as PLAYER_PIECE, ai2 plays as AI_PIECE.
@@ -16,6 +25,8 @@ def run_game(ai1, ai2):
     board = create_board()
     ais = [ai1, ai2]
     pieces = [PLAYER_PIECE, AI_PIECE]
+    ai1_meta = _ai_metadata(ai1)
+    ai2_meta = _ai_metadata(ai2)
     turn = 0
     move_num = 0
     move_records = []
@@ -32,6 +43,10 @@ def run_game(ai1, ai2):
         move_records.append({
             'move_num': move_num,
             'ai_name': current_ai.name,
+            'ai_type': current_ai.__class__.__name__,
+            'ai_depth': getattr(current_ai, "depth", ""),
+            'ai_heuristic': getattr(getattr(current_ai, "heuristic", None), "__name__", ""),
+            'piece': current_piece,
             'col_chosen': col,
             'score': current_ai.last_score,
             'nodes_evaluated': current_ai.nodes_evaluated,
@@ -53,8 +68,16 @@ def run_game(ai1, ai2):
 
     game_record = {
         'ai1_name': ai1.name,
+        'ai1_type': ai1_meta['ai_type'],
+        'ai1_depth': ai1_meta['depth'],
+        'ai1_heuristic': ai1_meta['heuristic'],
         'ai2_name': ai2.name,
+        'ai2_type': ai2_meta['ai_type'],
+        'ai2_depth': ai2_meta['depth'],
+        'ai2_heuristic': ai2_meta['heuristic'],
+        'starting_ai': ai1.name,
         'winner': winner if winner is not None else 'Draw',
+        'is_draw': winner is None,
         'total_moves': move_num,
         'duration_seconds': round(time.time() - game_start, 3),
     }
