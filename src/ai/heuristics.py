@@ -84,6 +84,6 @@ def defensive_heuristic(board, piece):
     Harder to beat — it shuts down your setups before building its own."""
     return _score_board(board, piece,
                         center_bonus=4,
-                        own_3_score=6,
-                        own_2_score=2,
-                        opp_3_penalty=24)
+                        own_3_score=8,
+                        own_2_score=3,
+                        opp_3_penalty=20)
