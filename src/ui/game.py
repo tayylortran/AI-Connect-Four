@@ -34,10 +34,27 @@ def draw_hover(screen, col, turn):
     pygame.draw.circle(screen, color, (cx, cy), C.RADIUS)
 
 
+def _fit_banner_font(text, max_width, max_height):
+    # Scale the banner font down so longer win messages still fit the top bar.
+    for size in range(64, 17, -2):
+        font = pygame.font.SysFont("segoeui", size, bold=True)
+        width, height = font.size(text)
+        if width <= max_width and height <= max_height:
+            return font
+    return pygame.font.SysFont("segoeui", 18, bold=True)
+
+
 def show_message(screen, text, color):
     overlay = pygame.Surface((C.WIDTH, C.SQUARESIZE), pygame.SRCALPHA)
     overlay.fill((0, 0, 0, 180))
     screen.blit(overlay, (0, 0))
-    label = C.FONT_LARGE.render(text, True, color)
+    padding_x = 20
+    padding_y = 12
+    font = _fit_banner_font(
+        text,
+        C.WIDTH - padding_x * 2,
+        C.SQUARESIZE - padding_y * 2,
+    )
+    label = font.render(text, True, color)
     rect = label.get_rect(center=(C.WIDTH // 2, C.SQUARESIZE // 2))
     screen.blit(label, rect)
